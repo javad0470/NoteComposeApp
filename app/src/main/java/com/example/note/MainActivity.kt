@@ -12,22 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.note.components.BottomNavigationBar
 import com.example.note.components.FabActionButton
-import com.example.note.components.Toolbar
-import com.example.note.screens.AddNoteScreen
-import com.example.note.screens.FavoriteScreen
-import com.example.note.screens.HomeScreen
 import com.example.note.ui.theme.NoteTheme
-import com.example.note.utils.BottomNavigationItems
 import com.example.note.utils.NavigateBetweenBottomNav
 import com.example.note.utils.NavigateMainScreens
 import com.example.note.utils.Navigation
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

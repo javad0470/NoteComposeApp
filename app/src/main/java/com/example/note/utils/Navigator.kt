@@ -17,7 +17,7 @@ fun NavigateMainScreens(navController: NavHostController) {
             MainScreen(navController)
         }
         composable(Navigation.AddNoteScreen.route) {
-            AddNoteScreen()
+            AddNoteScreen(navController)
         }
         composable(Navigation.UpdateNote.route){
             UpdateNoteScreen(navController)
