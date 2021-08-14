@@ -10,8 +10,8 @@ interface NoteDao {
     fun getAllData(): List<NoteModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertNote(noteModel: NoteModel): Long
+    suspend fun insertNote(noteModel: NoteModel): Long
 
     @Delete
-    fun deleteNote(noteModel: NoteModel): Int
+    suspend fun deleteNote(noteModel: NoteModel): Int
 }

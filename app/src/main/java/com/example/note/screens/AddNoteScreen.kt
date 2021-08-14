@@ -12,20 +12,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.note.components.Toolbar
 import com.example.note.data.local.model.NoteModel
-import com.example.note.utils.Navigation
 import com.example.note.viewmodel.MainViewModel
 
+
 @Composable
-fun AddNoteScreen(navController: NavController) {
+fun AddNoteScreen(
+    navController: NavController,
+    mainViewModel: MainViewModel = viewModel()
+) {
+
     Scaffold(topBar = {
         AddNoteToolbar {
-            navController.navigate(Navigation.MainScreen.route)
+            navController.popBackStack()
         }
     }) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -49,7 +51,16 @@ fun AddNoteScreen(navController: NavController) {
                 value = desc,
                 onValueChange = { desc = it })
             Button(
-                onClick = { },
+                onClick = {
+                    insertNote(
+                        title = title,
+                        desc = desc,
+                        mainViewModel = mainViewModel,
+                        navController
+                    )
+                    title = ""
+                    desc = ""
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(75.dp)
@@ -81,20 +92,23 @@ fun AddNoteToolbar(onBackClick: () -> Unit) {
     )
 }
 
-@Composable
-fun InsertNote() {
-    val viewModel: MainViewModel by viewModel()
-    val note = NoteModel(0, "", "")
-    viewModel.insertNote(note)
+fun insertNote(
+    title: String,
+    desc: String,
+    mainViewModel: MainViewModel,
+    navController: NavController
+) {
+    val note = NoteModel(0, title, desc)
+    mainViewModel.insertNote(note)
+    navController.popBackStack()
 }
 
-fun insertNote() {
-
-}
 
 @Preview
 @Composable
 fun AddNoteScreenPreview() {
     val navController = rememberNavController()
+    // val viewModel: MainViewModel = viewModel()
     AddNoteScreen(navController)
 }
+

@@ -12,6 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
 
+    // Local Database (Room)
     val getAllData: Flow<List<NoteModel>> = repository.getAllData
 
     fun insertNote(noteModel: NoteModel) = viewModelScope.launch {
@@ -21,5 +22,11 @@ class MainViewModel @Inject constructor(private val repository: Repository) : Vi
     fun deleteNote(noteModel: NoteModel) = viewModelScope.launch {
         repository.deleteNote(noteModel = noteModel)
     }
+
+
+    // Add Note Screen Functions
+
+
+
 
 }
