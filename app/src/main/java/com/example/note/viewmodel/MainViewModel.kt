@@ -27,6 +27,4 @@ class MainViewModel @Inject constructor(private val repository: Repository) : Vi
     // Add Note Screen Functions
 
 
-
-
 }

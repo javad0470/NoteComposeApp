@@ -16,7 +16,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.note.data.local.model.NoteModel
+import com.example.note.utils.SnackBar
 import com.example.note.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -24,12 +27,15 @@ fun AddNoteScreen(
     navController: NavController,
     mainViewModel: MainViewModel = viewModel()
 ) {
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
 
-    Scaffold(topBar = {
-        AddNoteToolbar {
-            navController.popBackStack()
-        }
-    }) {
+    Scaffold(scaffoldState = scaffoldState,
+        topBar = {
+            AddNoteToolbar {
+                navController.popBackStack()
+            }
+        }) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             var title by remember {
                 mutableStateOf("")
@@ -56,10 +62,10 @@ fun AddNoteScreen(
                         title = title,
                         desc = desc,
                         mainViewModel = mainViewModel,
-                        navController
+                        navController = navController,
+                        scaffoldState = scaffoldState,
+                        scope = scope
                     )
-                    title = ""
-                    desc = ""
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,11 +102,18 @@ fun insertNote(
     title: String,
     desc: String,
     mainViewModel: MainViewModel,
-    navController: NavController
-) {
-    val note = NoteModel(0, title, desc)
-    mainViewModel.insertNote(note)
-    navController.popBackStack()
+    navController: NavController,
+    scaffoldState: ScaffoldState,
+    scope: CoroutineScope
+) = scope.launch {
+    if (title == "" || desc == "") {
+        scaffoldState.snackbarHostState.showSnackbar("Please Fill All TextFields")
+    }else{
+        val note = NoteModel(0,title, desc)
+        mainViewModel.insertNote(note)
+        scaffoldState.snackbarHostState.showSnackbar("Successfully Added")
+        navController.popBackStack()
+    }
 }
 
 
@@ -108,7 +121,6 @@ fun insertNote(
 @Composable
 fun AddNoteScreenPreview() {
     val navController = rememberNavController()
-    // val viewModel: MainViewModel = viewModel()
     AddNoteScreen(navController)
 }
 

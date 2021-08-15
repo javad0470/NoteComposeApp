@@ -1,5 +1,6 @@
 package com.example.note.utils
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -21,7 +22,7 @@ fun NavigateMainScreens(navController: NavHostController) {
         }
         composable(Navigation.AddNoteScreen.route) {
             val viewModel = hiltViewModel<MainViewModel>()
-            AddNoteScreen(navController,viewModel)
+            AddNoteScreen(navController, viewModel)
         }
         composable(Navigation.UpdateNote.route) {
             UpdateNoteScreen(navController)
@@ -36,7 +37,8 @@ fun NavigateBetweenBottomNav(navController: NavHostController) {
         startDestination = BottomNavigationItems.Home.route
     ) {
         composable(BottomNavigationItems.Home.route) {
-            HomeScreen()
+            val viewModel = hiltViewModel<MainViewModel>()
+            HomeScreen(viewModel)
         }
         composable(BottomNavigationItems.Favorite.route) {
             FavoriteScreen()

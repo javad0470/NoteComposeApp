@@ -1,18 +1,15 @@
 package com.example.note.screens
 
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,8 +18,7 @@ import com.example.note.components.Toolbar
 import com.example.note.data.local.model.NoteModel
 import com.example.note.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.count
-import kotlinx.coroutines.launch
+
 
 @Composable
 fun HomeScreen(
@@ -30,39 +26,49 @@ fun HomeScreen(
 ) {
     val notes = mainViewModel.getAllData.collectAsState(listOf()).value
 
-    Scaffold(topBar = {
-        Toolbar(title = "Notes Screen")
-    }) {
-        LazyColumn {
-            items(notes.size) {
-                notes.forEach { note ->
-                    NoteItemCard(note)
+    if (notes.isNullOrEmpty()) {
+        Scaffold(topBar = { Toolbar(title = "Note Screen") }) {
+            Box(
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+            ) {
+                Text(text = "No data")
+            }
+        }
+    } else {
+        Scaffold(topBar = {
+            Toolbar(title = "Notes Screen")
+        }) {
+            LazyColumn {
+                items(notes) { note ->
+                    NoteItemCard(note = note,mainViewModel)
                 }
             }
         }
-
-
     }
+
 }
 
 @Composable
-fun NoteItemCard(note: NoteModel) {
+fun NoteItemCard(note: NoteModel, mainViewModel: MainViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(12.dp)
-            .clickable {},
+            .clickable {
+                //Handle Item Click
+                mainViewModel.deleteNote(note)
+            },
         elevation = 8.dp
     ) {
-        Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.padding(8.dp)) {
-            Icon(
-                imageVector = Icons.Default.Favorite, contentDescription = null,
-                tint = Color.Black.copy(0.4f),
-                modifier = Modifier.clickable {
-                    // Add To Favorite Click
-                }
-            )
+        Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.padding(12.dp)) {
+            Surface(
+                color = Color.Green,
+                modifier = Modifier
+                    .height(12.dp)
+                    .width(12.dp)
+                    .clip(CircleShape)
+            ) {}
         }
         Column(modifier = Modifier.padding(8.dp)) {
 
